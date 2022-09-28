@@ -23,7 +23,8 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "useUnknownInCatchVariables": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "declaration": true
   },
   "ts-node": {
     "transpileOnly": true,
