@@ -82,4 +82,7 @@ export const factory = (token?: AuthToken | string, cached = true) => {
 factory.prototype.host = host;
 factory.prototype.token = authtoken;
 
-export default factory;
+export default factory as typeof factory & {
+  host: typeof host,
+  token: typeof authtoken
+};
