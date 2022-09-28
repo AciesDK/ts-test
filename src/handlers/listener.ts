@@ -6,14 +6,14 @@ const sns = new aws.SNS();
 
 type IEventType = 'Created' | 'Updated' | 'Deleted' | 'Refresh';
 type IEventAttributes = { [ name: string ]: string | number; };
-type IEventGenerator = (service: string, resource: string, event: IEventType, attributes: IEventAttributes) => ISNSEvent[];
+type IEventGenerator = <T extends {}>(service: string, resource: string, event: IEventType, model: T, attributes: IEventAttributes) => ISNSEvent[];
 
-interface ISNSEvent {
+interface ISNSEvent<T extends {} = any> {
   service: string;
   resource: string;
-  event: string;
+  event: IEventType;
   delay?: number;
-  model: object;
+  model: T;
   attributes?: IEventAttributes;
 }
 
@@ -66,7 +66,7 @@ export const factory = (events: IEventGenerator) => async (event: SNSEvent) => {
   // mock sns responses from other service listeners
   const promises: Promise<any>[] = [];
 
-  events.call(model, service, resource, attributes.Event as IEventType, attributes)
+  events.call({ accountId }, service, resource, attributes.Event as IEventType, model, attributes)
     .forEach(v => {
       promises
         .push(new Promise(async (res,rej) => {
