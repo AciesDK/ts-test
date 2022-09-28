@@ -50,39 +50,40 @@ export const authtoken = (account: string, config: Partial<IConfig> & { account?
   return authtoken;
 }
 
-export const factory = (token?: AuthToken | string, cached = true) => {
-  const api = axios.create({
-    baseURL: host,
-    validateStatus: () => true,
-    timeout: 10000
-  });
+export const factory = (() => {
+  const f = (token?: AuthToken | string, cached = true) => {
+    const api = axios.create({
+      baseURL: host,
+      validateStatus: () => true,
+      timeout: 10000
+    });
 
-  api.defaults.headers.common['User-Agent'] = 'AciesCore Integration Test';
-  api.defaults.headers.common['x-debug'] = 'debug';
+    api.defaults.headers.common['User-Agent'] = 'AciesCore Integration Test';
+    api.defaults.headers.common['x-debug'] = 'debug';
 
-  if (!cached) {
-    api.defaults.headers.common['Cache-Control'] = 'no-cache, max-age=0';
-  }
-  
-  if (token) {
-    if (typeof token !== 'string') {
-      if (token.config.type === 'user') {
-        api.defaults.headers.common['x-account-id'] = token.config.account;
+    if (!cached) {
+      api.defaults.headers.common['Cache-Control'] = 'no-cache, max-age=0';
+    }
+    
+    if (token) {
+      if (typeof token !== 'string') {
+        if (token.config.type === 'user') {
+          api.defaults.headers.common['x-account-id'] = token.config.account;
+        }
+
+        token = token?.toString();
       }
 
-      token = token?.toString();
+      api.defaults.headers.common.Authorization = token;
     }
 
-    api.defaults.headers.common.Authorization = token;
-  }
+    return api;
+  };
 
-  return api;
-}
+  f.host = host;
+  f.token = authtoken;
 
-factory.prototype.host = host;
-factory.prototype.token = authtoken;
+  return f;
+})();
 
-export default factory as typeof factory & {
-  host: typeof host,
-  token: typeof authtoken
-};
+export default factory;
