@@ -1,10 +1,5 @@
 import axios from 'axios'
-import { config as dotenv } from 'dotenv'
 import { IAuthToken } from '../handlers/authorize';
-
-dotenv({
-  override: true
-});
 
 export const host = process.env.APIHOST!;
 

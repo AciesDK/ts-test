@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": { "*": ["types/*"] },
     "module": "ESNext",
     "target": "es2019",
     "lib": [
@@ -9,9 +8,7 @@
     ],
     "moduleResolution": "node",
     "outDir": "./lib",
-    "rootDirs": [
-      "./src"
-    ],
+    "rootDir": "./src",
     "inlineSourceMap": false,
     "esModuleInterop": true,
     "skipLibCheck": true,

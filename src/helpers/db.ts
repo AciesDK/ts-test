@@ -1,10 +1,5 @@
 import { DynamoDB } from 'aws-sdk'
 import http from 'https'
-import { config as dotenv } from 'dotenv'
-
-dotenv({
-  override: true
-});
 
 export const modelStore = process.env.MODELSTORE!;
 

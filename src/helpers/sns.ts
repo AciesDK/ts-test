@@ -1,14 +1,9 @@
 import { SNS } from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { db } from './db'
-import { config as dotenv } from 'dotenv'
 import { randomUUID as uuid } from 'crypto'
 
 const testStart = new Date().getTime() - Math.ceil(process.uptime()) * 1000;
-
-dotenv({
-  override: true
-});
 
 export const snsArn = process.env.SNS!;
 
