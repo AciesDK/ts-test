@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": { "*": ["types/*"] },
+    "module": "ESNext",
+    "target": "es2019",
+    "lib": [
+      "es2020"
+    ],
+    "moduleResolution": "node",
+    "outDir": "./lib",
+    "rootDirs": [
+      "./src"
+    ],
+    "inlineSourceMap": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": true,
+    "removeComments": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "useUnknownInCatchVariables": false,
+    "resolveJsonModule": true
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs",
+      "inlineSourceMap": true,
+      "removeComments": false
+    }
+  }
+}
