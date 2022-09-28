@@ -23,7 +23,7 @@
     "check": "tsc --noEmit --pretty",
     "test": "exit 0; tap --ts --bail --files src/**/*.test.ts",
     "build": "tsc -p tsconfig.json",
-    "prepare": "npm run -s generate:indexes && npm run build",
+    "prepare": "npm run build",
     "prepublishOnly": "npm test",
     "postversion": "git push && git push --tags"
   },
