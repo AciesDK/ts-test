@@ -8,3 +8,5 @@ const agent = new http.Agent({
 });
   
 export const db = new DynamoDB.DocumentClient({ region: 'eu-central-1', httpOptions: { agent: agent } });
+
+export default db;
