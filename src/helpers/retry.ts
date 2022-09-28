@@ -77,3 +77,5 @@ export const retry = async function<T extends unknown>(
     }
   }
 }
+
+export default retry;

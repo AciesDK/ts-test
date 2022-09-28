@@ -26,7 +26,7 @@ class AuthToken {
   }
 }
 
-export function authtoken(account: string, config: Partial<IConfig> & { account?: undefined } = {}): AuthToken{
+export const authtoken = (account: string, config: Partial<IConfig> & { account?: undefined } = {}): AuthToken => {
   if (config.type && !['server','user'].includes(config.type)) throw Error('Type not valid');
   if (!uuidRegex.test(account)) throw Error('Account not valid uuid');
   if (config.organization && !uuidRegex.test(config.organization)) throw Error('Organization not valid uuid');
@@ -83,3 +83,8 @@ export const factory = (token?: AuthToken | string, cached = true) => {
 
   return api;
 }
+
+factory.prototype.host = host;
+factory.prototype.token = authtoken;
+
+export default factory;
