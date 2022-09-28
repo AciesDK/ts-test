@@ -6,7 +6,7 @@ const sns = new aws.SNS();
 
 type IEventType = 'Created' | 'Updated' | 'Deleted' | 'Refresh';
 type IEventAttributes = { [ name: string ]: string | number; };
-type IEventGenerator = <T extends {}>(service: string, resource: string, event: IEventType, model: T, attributes: IEventAttributes) => ISNSEvent[];
+type IEventGenerator = <T>(service: string, resource: string, event: IEventType, model: T, attributes: IEventAttributes) => ISNSEvent[] & ThisType<T>;
 
 interface ISNSEvent<T extends {} = any> {
   service: string;
