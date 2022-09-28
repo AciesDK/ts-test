@@ -29,11 +29,15 @@ interface IEvent extends DocumentClient.AttributeMap {
 
 type SatisfyFunction = (event: any) => boolean;
 
-export async function events(service: string, account: string, resource: string): Promise<IEvent[]>;
-export async function events(service: string, account: string, resource: string, event?: 'Created' | 'Updated' | 'Deleted' | 'Refresh'): Promise<IEvent[]>;
-export async function events(service: string, account: string, resource: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
-export async function events(service: string, account: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
-export async function events(service: string, account: string, filter?: string | SatisfyFunction, filter2?: string | SatisfyFunction): Promise<IEvent[]> {
+export let service: string | undefined = (process.env.APIHOST || '').split('/').reverse()[0] || undefined;
+
+export async function eventsHandler(account: string, resource: string): Promise<IEvent[]>;
+export async function eventsHandler(account: string, resource: string, event?: IAttributeEvent): Promise<IEvent[]>;
+export async function eventsHandler(account: string, resource: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
+export async function eventsHandler(account: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
+export async function eventsHandler(account: string, filter?: string | SatisfyFunction, filter2?: string | SatisfyFunction): Promise<IEvent[]> {
+  if (!service) throw Error('Service not set for events');
+  
   const query: string[] = ['#account = :account'];
   const filters: string[] = [];
   const names: { [n:string ]: string;} = {
@@ -88,6 +92,18 @@ export async function events(service: string, account: string, filter?: string |
 
   return await handler();
 }
+
+export const events = (() => {
+  const t: typeof eventsHandler & {
+    service?: (v: string) => void;
+  } = eventsHandler;
+
+  t.service = (v: string) => {
+    service = v;
+  };
+
+  return t;
+})();
 
 interface IAttributes {
   [ name: string ]: string | number | undefined;
