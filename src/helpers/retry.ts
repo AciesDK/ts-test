@@ -16,7 +16,7 @@ type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 
-export default async function<T extends unknown>(
+export const retry = async function<T extends unknown>(
   handler: IRetryHandler<T>,
   tester: IRetryTester<T>,
   breakout?: IRetryBreakout<T>,

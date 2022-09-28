@@ -12,6 +12,4 @@ const agent = new http.Agent({
   keepAlive: true
 });
   
-const db = new DynamoDB.DocumentClient({ region: 'eu-central-1', httpOptions: { agent: agent } });
-
-export default db;
+export const db = new DynamoDB.DocumentClient({ region: 'eu-central-1', httpOptions: { agent: agent } });

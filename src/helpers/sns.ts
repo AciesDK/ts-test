@@ -1,6 +1,6 @@
 import { SNS } from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import db from './db'
+import { db } from './db'
 import { config as dotenv } from 'dotenv'
 import { randomUUID as uuid } from 'crypto'
 
@@ -12,9 +12,7 @@ dotenv({
 
 export const snsArn = process.env.SNS!;
 
-const sns = new SNS({ region: 'eu-central-1' });
-
-export default sns;
+export const sns = new SNS({ region: 'eu-central-1' });
 
 const snsTable = process.env.SNSTABLE!;
 

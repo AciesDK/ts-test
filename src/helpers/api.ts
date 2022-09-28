@@ -55,7 +55,7 @@ export function authtoken(account: string, config: Partial<IConfig> & { account?
   return authtoken;
 }
 
-export default (token?: AuthToken | string, cached = true) => {
+export const factory = (token?: AuthToken | string, cached = true) => {
   const api = axios.create({
     baseURL: host,
     validateStatus: () => true,
