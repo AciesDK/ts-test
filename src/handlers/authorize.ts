@@ -11,7 +11,7 @@ export interface IAuthToken {
   };
 }
 
-export const factory = (service: string, defaultPermissions: string[]) => async (event: { type: 'TOKEN', methodArn: string; authorizationToken: string; }) => {
+export const factory = (service: string, defaultPermissions: string[] = []) => async (event: { type: 'TOKEN', methodArn: string; authorizationToken: string; }) => {
   const resources = (([arn,stage],methods)=>methods.map(method => [arn,stage,method+'/*'].join('/')))(event.methodArn.split('/', 2),['OPTIONS','HEAD','GET','POST','PATCH','PUT','DELETE']);
 
   try {
