@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 import { IAuthToken } from '../handlers/authorize';
 
 export const host = process.env.APIHOST;
@@ -50,9 +50,9 @@ export const authtoken = (account: string, config: Partial<IConfig> & { account?
   return authtoken;
 }
 
-function factoryHandler(account?: string, cached?: boolean);
-function factoryHandler(token?: AuthToken, cached?: boolean);
-function factoryHandler(tokenOrAccount?: AuthToken | string, cached = true) {
+function factoryHandler(account?: string, cached?: boolean): AxiosInstance;
+function factoryHandler(token?: AuthToken, cached?: boolean): AxiosInstance;
+function factoryHandler(tokenOrAccount?: AuthToken | string, cached = true): AxiosInstance {
   const api = axios.create({
     baseURL: host,
     validateStatus: () => true,
