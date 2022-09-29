@@ -1,6 +1,6 @@
 {
   "name": "@acies/test",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Package for testing Acies Core services written in TypeScript",
   "keywords": [],
   "author": "Acies A/S",
@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "check": "tsc --noEmit --pretty",
-    "test": "tap --ts --bail --files test/**/*.test.ts",
+    "test": "tap --ts --bail --no-cov --files test/**/*.test.ts",
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",

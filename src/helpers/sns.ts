@@ -95,8 +95,8 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
 
 export const events = (() => {
   const t: typeof eventsHandler & {
-    service?: (v: string) => void;
-  } = eventsHandler;
+    service: (v: string) => void;
+  } = eventsHandler as any;
 
   t.service = (v: string) => {
     service = v;

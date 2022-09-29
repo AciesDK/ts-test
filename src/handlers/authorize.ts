@@ -11,9 +11,7 @@ export interface IAuthToken {
   };
 }
 
-export const factory = (service: string, defaultPermissions: string[]) => async (event: { methodArn: string; authorizationToken: string; }) => {
-  console.log('event', JSON.stringify(event));
-
+export const factory = (service: string, defaultPermissions: string[]) => async (event: { type: 'TOKEN', methodArn: string; authorizationToken: string; }) => {
   const resources = (([arn,stage],methods)=>methods.map(method => [arn,stage,method+'/*'].join('/')))(event.methodArn.split('/', 2),['OPTIONS','HEAD','GET','POST','PATCH','PUT','DELETE']);
 
   try {
@@ -30,12 +28,26 @@ export const factory = (service: string, defaultPermissions: string[]) => async 
 
     token.permissions = Array.isArray(token.permissions) ? token.permissions.map(v=>service+':'+v) : Object.fromEntries(Object.entries(token.permissions!).map(([k,v])=>[k,v.map(v=>service+':'+v)]));
 
-    console.log('token', JSON.stringify(token));
-
     if (!token.account || !/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(token.account)) throw Error('Account not defined');
 
     const identity = token.type === 'server' ? token.server : token.user;
     const identityV2 = token.type === 'server' ? token.organization + ':' + token.account + ':' + token.server : '::' + token.user;
+
+    const context = {
+      Identity: identity,
+      IdentityV2: identityV2,
+      Version: '1.0',
+      AccountId: token.type === 'server' ? token.account : undefined,
+      PolicyDocument: zlib.gzipSync(Buffer.from(JSON.stringify({
+        id: identity,
+        identity: identityV2,
+        type: token.type,
+        cognitoIds: [],
+        accounts: Array.isArray(token.permissions) ? [{id:token.account,permissions:token.permissions}] : Object.entries(token.permissions).map(([k,v])=>({id:k,permissions:v})),
+        permissions: []
+      }))).toString('base64'),
+      DebugEnabled: 'true'
+    };
 
     const result = {
       principalId: identity,
@@ -47,30 +59,12 @@ export const factory = (service: string, defaultPermissions: string[]) => async 
           Resource: resources
         }]
       },
-      context: JSON.parse(JSON.stringify({
-        Identity: identity,
-        IdentityV2: identityV2,
-        Version: '1.0',
-        AccountId: token.type === 'server' ? token.account : undefined,
-        PolicyDocument: zlib.gzipSync(Buffer.from(JSON.stringify({
-          id: identity,
-          identity: identityV2,
-          type: token.type,
-          cognitoIds: [],
-          accounts: Array.isArray(token.permissions) ? [{id:token.account,permissions:token.permissions}] : Object.entries(token.permissions).map(([k,v])=>({id:k,permissions:v})),
-          permissions: []
-        }))).toString('base64'),
-        DebugEnabled: 'true'
-      }))
+      context: JSON.parse(JSON.stringify(context)) as typeof context
     };
-
-    console.log('result', JSON.stringify(result));
 
     return result;
   }
   catch(e) {
-    console.error('exception', e);
-
     return {
       principalId: 'exception' + (new Date()).getTime(),
       policyDocument: {
@@ -80,7 +74,8 @@ export const factory = (service: string, defaultPermissions: string[]) => async 
           Effect: 'Deny',
           Resource: resources
         }]
-      }
+      },
+      context: undefined
     };
   }
 };

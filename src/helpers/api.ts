@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { IAuthToken } from '../handlers/authorize';
 
-export const host = process.env.APIHOST!;
+export const host = process.env.APIHOST;
 
-if (process.env.APIHOST) process.env.API = host.replace(/^https?:\/\//, '').replace(/\/[^/]+$/, '');
+if (host && process.env.APIHOST) process.env.API = host.replace(/^https?:\/\//, '').replace(/\/[^/]+$/, '');
 
-process.env.SERVICE = host.split('/').reverse()[0];
+process.env.SERVICE = host?.split('/').reverse()[0];
 
 interface IConfig extends IAuthToken {
   
@@ -50,35 +50,43 @@ export const authtoken = (account: string, config: Partial<IConfig> & { account?
   return authtoken;
 }
 
-export const factory = (() => {
-  const f = (token?: AuthToken | string, cached = true) => {
-    const api = axios.create({
-      baseURL: host,
-      validateStatus: () => true,
-      timeout: 10000
-    });
+function factoryHandler(account?: string, cached?: boolean);
+function factoryHandler(token?: AuthToken, cached?: boolean);
+function factoryHandler(tokenOrAccount?: AuthToken | string, cached = true) {
+  const api = axios.create({
+    baseURL: host,
+    validateStatus: () => true,
+    timeout: 10000
+  });
 
-    api.defaults.headers.common['User-Agent'] = 'AciesCore Integration Test';
-    api.defaults.headers.common['x-debug'] = 'debug';
+  api.defaults.headers.common['User-Agent'] = 'AciesCore Integration Test';
+  api.defaults.headers.common['x-debug'] = 'debug';
 
-    if (!cached) {
-      api.defaults.headers.common['Cache-Control'] = 'no-cache, max-age=0';
-    }
-    
-    if (token) {
-      if (typeof token !== 'string') {
-        if (token.config.type === 'user') {
-          api.defaults.headers.common['x-account-id'] = token.config.account;
-        }
-
-        token = token?.toString();
+  if (!cached) {
+    api.defaults.headers.common['Cache-Control'] = 'no-cache, max-age=0';
+  }
+  
+  if (tokenOrAccount) {
+    if (tokenOrAccount instanceof AuthToken) {
+      if (tokenOrAccount.config.type === 'user') {
+        api.defaults.headers.common['x-account-id'] = tokenOrAccount.config.account;
       }
-
-      api.defaults.headers.common.Authorization = token;
+    }
+    else {
+      tokenOrAccount = authtoken(tokenOrAccount);
     }
 
-    return api;
-  };
+    api.defaults.headers.common.Authorization = tokenOrAccount.toString();
+  }
+
+  return api;
+}
+
+export const factory = (() => {
+  const f: typeof factoryHandler & {
+    host: typeof host;
+    token: typeof authtoken;
+  } = factoryHandler as any;
 
   f.host = host;
   f.token = authtoken;
