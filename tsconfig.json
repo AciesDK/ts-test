@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "module": "ESNext",
+    "module": "commonjs",
     "target": "es2019",
-    "lib": [
-      "es2020"
-    ],
     "moduleResolution": "node",
     "outDir": "./lib",
-    "rootDir": "./src",
+    "rootDir": "src",
     "inlineSourceMap": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -23,11 +20,11 @@
     "resolveJsonModule": true,
     "declaration": true
   },
+  "include": ["src"],
   "ts-node": {
     "transpileOnly": true,
     "files": true,
     "compilerOptions": {
-      "module": "commonjs",
       "inlineSourceMap": true,
       "removeComments": false
     }
