@@ -50,8 +50,9 @@ export const authtoken = (account: string, config: Partial<IConfig> & { account?
   return authtoken;
 }
 
-function factoryHandler(account?: string, cached?: boolean): AxiosInstance;
-function factoryHandler(token?: AuthToken, cached?: boolean): AxiosInstance;
+function factoryHandler(): AxiosInstance;
+function factoryHandler(account: string, cached?: boolean): AxiosInstance;
+function factoryHandler(token: AuthToken, cached?: boolean): AxiosInstance;
 function factoryHandler(tokenOrAccount?: AuthToken | string, cached = true): AxiosInstance {
   const api = axios.create({
     baseURL: host,
