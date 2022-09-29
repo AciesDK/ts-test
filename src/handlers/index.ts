@@ -1,2 +1,2 @@
-export * as authorize from './authorize'
-export * as listener from './listener'
+export { factory as authorizer } from './authorize'
+export { factory as listener } from './listener'
