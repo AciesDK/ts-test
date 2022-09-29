@@ -1,6 +1,7 @@
 {
   "name": "@acies/test",
-  "version": "1.0.14",
+  "type": "module",
+  "version": "1.0.15",
   "description": "Package for testing Acies Core services written in TypeScript",
   "keywords": [],
   "author": "Acies A/S",
