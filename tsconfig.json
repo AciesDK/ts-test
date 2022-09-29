@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "module": "commonjs",
-    "target": "es2019",
-    "moduleResolution": "node",
+    "module": "node16",
+    "target": "es2021",
+    "moduleResolution": "node16",
     "outDir": "./lib",
     "rootDir": "src",
     "inlineSourceMap": false,
