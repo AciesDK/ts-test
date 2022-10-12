@@ -33,6 +33,7 @@ export let service: string | undefined = (process.env.APIHOST || '').split('/').
 
 export async function eventsHandler(account: string, resource: string): Promise<IEvent[]>;
 export async function eventsHandler(account: string, resource: string, event?: IAttributeEvent): Promise<IEvent[]>;
+export async function eventsHandler(account: string, resource: 'Job', job: string): Promise<IEvent[]>;
 export async function eventsHandler(account: string, resource: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
 export async function eventsHandler(account: string, satisfy: SatisfyFunction): Promise<IEvent[]>;
 export async function eventsHandler(account: string, filter?: string | SatisfyFunction, filter2?: string | SatisfyFunction): Promise<IEvent[]> {
@@ -55,9 +56,16 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
         values[':key'] = service + '/' + filter + '/' + filter2;
       }
       else {
-        query.push('begins_with(#key, :key)');
-        names['#key'] = 'key';
-        values[':key'] = service + '/' + filter + '/';
+        if (filter.toLowerCase() === 'job') {
+          query.push('#key = :key');
+          names['#key'] = 'key';
+          values[':key'] = service + '/Job:' + filter2;
+        }
+        else {
+          query.push('begins_with(#key, :key)');
+          names['#key'] = 'key';
+          values[':key'] = service + '/' + filter + '/';
+        }
       }
     }
   }
