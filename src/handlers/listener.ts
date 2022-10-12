@@ -41,7 +41,7 @@ export const factory = (events: IEventGenerator) => async (event: SNSEvent) => {
   const service = String(attributes.Service || 'noname');
   const resource = String(attributes.Resource || 'Job:' + attributes.Job);
   const accountId = String(attributes.AccountId);
-  const identityId = String(attributes.IdentityId || attributes.UserId);
+  const identityId = String(attributes.IdentityId || attributes.UserId || "") || null;
   const t = (event.Records[0].Sns.Timestamp ? new Date(event.Records[0].Sns.Timestamp) : new Date()).getTime();
 
   await db

@@ -51,9 +51,13 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
   if (filter) {
     if (typeof filter === 'string') {
       if (filter.toLowerCase() === 'job') {
-        query.push('#key = :key');
-        names['#key'] = 'key';
-        values[':key'] = service + '/Job:' + filter2;
+        if (typeof filter2 === 'string') {
+          const [ jobService, job ] = filter2.split(':');
+
+          query.push('#key = :key');
+          names['#key'] = 'key';
+          values[':key'] = jobService + '/Job:' + job;
+        }
       }
       else if (typeof filter2 === 'string') {
         query.push('#key = :key');
