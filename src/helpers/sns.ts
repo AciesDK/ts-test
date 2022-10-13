@@ -54,9 +54,16 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
         if (typeof filter2 === 'string') {
           const [ jobService, job ] = filter2.split(':');
 
-          query.push('#key = :key');
-          names['#key'] = 'key';
-          values[':key'] = jobService + '/Job:' + job;
+          if (job) {
+            query.push('#key = :key');
+            names['#key'] = 'key';
+            values[':key'] = jobService + '/Job:' + job;
+          }
+          else {
+            query.push('begins_with(#key, :key)');
+            names['#key'] = 'key';
+            values[':key'] = jobService + '/Job:';
+          }
         }
       }
       else if (typeof filter2 === 'string') {
@@ -115,15 +122,24 @@ export const events = (() => {
   return t;
 })();
 
-interface IAttributes {
+interface IBaseAttributes {
   [ name: string ]: string | number | undefined;
   Service: string;
-  Resource: string;
-  Event: IAttributeEvent;
   AccountId?: string;
   CorrelationId?: string;
   Debug?: 'trace' | 'debug';
 }
+
+interface IResourceAttributes extends IBaseAttributes {
+  Resource: string;
+  Event: IAttributeEvent;
+}
+
+interface IJobAttributes extends IBaseAttributes {
+  Job: string;
+}
+
+type IAttributes = IResourceAttributes | IJobAttributes;
 
 type IAttributeEvent = 'Created' | 'Updated' | 'Deleted' | 'Refresh';
 
