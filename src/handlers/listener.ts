@@ -42,14 +42,16 @@ export const factory = (events: IEventGenerator) => async (event: SNSEvent) => {
   const resource = String(attributes.Resource || 'Job:' + attributes.Job);
   const accountId = String(attributes.AccountId);
   const identityId = String(attributes.IdentityId || attributes.UserId || "") || null;
-  const t = (event.Records[0].Sns.Timestamp ? new Date(event.Records[0].Sns.Timestamp) : new Date()).getTime() + "." + Math.random().toString().concat('0'.repeat(4)).substring(2,6);
+  const t = (event.Records[0].Sns.Timestamp ? new Date(event.Records[0].Sns.Timestamp) : new Date()).getTime();
 
+  const key = service + '/' + resource + (attributes.Event ? '/' + attributes.Event : '') + '/' + t + '.' + Math.random().toString().concat('0'.repeat(4)).substring(2,6);
+  
   await db
     .put({
       TableName: process.env.TABLE!,
       Item: {
         account: accountId,
-        key: service + '/' + resource + (attributes.Event ? '/' + attributes.Event : ''),
+        key: key,
         timestamp: t,
         event: model,
         attributes: attributes,

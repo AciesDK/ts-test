@@ -55,9 +55,9 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
           const [ jobService, job ] = filter2.split(':');
 
           if (job) {
-            query.push('#key = :key');
+            query.push('begins_with(#key, :key)');
             names['#key'] = 'key';
-            values[':key'] = jobService + '/Job:' + job;
+            values[':key'] = jobService + '/Job:' + job + '/';
           }
           else {
             query.push('begins_with(#key, :key)');
@@ -67,9 +67,9 @@ export async function eventsHandler(account: string, filter?: string | SatisfyFu
         }
       }
       else if (typeof filter2 === 'string') {
-        query.push('#key = :key');
+        query.push('begins_with(#key, :key)');
         names['#key'] = 'key';
-        values[':key'] = service + '/' + filter + '/' + filter2;
+        values[':key'] = service + '/' + filter + '/' + filter2 + '/';
       }
       else {
         query.push('begins_with(#key, :key)');
