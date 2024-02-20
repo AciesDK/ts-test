@@ -30,7 +30,7 @@
   "dependencies": {
     "dotenv": "^16.0.2",
     "aws-sdk": "^2.1001.0",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "chai": "^4.3.6",
     "chai-subset": "^1.6.0"
   },
