@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "module": "node16",
-    "target": "es2021",
-    "moduleResolution": "node16",
+    "module": "NodeNext",
+    "target": "ES2021",
+    "moduleResolution": "NodeNext",
     "outDir": "./lib",
     "rootDir": "src",
     "inlineSourceMap": false,
