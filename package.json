@@ -1,6 +1,6 @@
 {
   "name": "@acies/test",
-  "version": "1.0.30",
+  "version": "2.0.0",
   "description": "Package for testing Acies Core services written in TypeScript",
   "keywords": [],
   "author": "Acies A/S",
@@ -28,19 +28,20 @@
     "postversion": "git push && git push --tags"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "aws-sdk": "^2.1556.0",
-    "axios": "^1.6.7",
-    "chai": "^4.3.6",
-    "chai-subset": "^1.6.0"
+    "@aws-sdk/client-dynamodb": "^3.828.0",
+    "@aws-sdk/client-sns": "^3.828.0",
+    "@aws-sdk/lib-dynamodb": "^3.828.0",
+    "@aws-sdk/node-http-handler": "^3.370.0",
+    "axios": "1.9.0",
+    "chai": "5.2.0",
+    "dotenv": "16.5.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.106",
-    "@types/chai": "^4.3.3",
-    "@types/chai-subset": "^1.3.3",
-    "@types/node": "^18.7.23",
-    "tap": "^16.3.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "@types/aws-lambda": "8.10.149",
+    "@types/chai": "5.2.2",
+    "@types/node": "^22.15.31",
+    "tap": "21.1.0",
+    "ts-node": "10.9.2",
+    "typescript": "5.8.3"
   }
 }
