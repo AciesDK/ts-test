@@ -1,8 +1,10 @@
-import * as aws from 'aws-sdk'
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { DynamoDB } from '@aws-sdk/client-dynamodb';
+import { MessageAttributeValue, SNS } from '@aws-sdk/client-sns';
 import { SNSEvent } from 'aws-lambda'
 
-const db = new aws.DynamoDB.DocumentClient();
-const sns = new aws.SNS();
+const db = DynamoDBDocument.from(new DynamoDB());
+const sns = new SNS();
 
 type IEventType = 'Created' | 'Updated' | 'Deleted' | 'Refresh';
 type IEventAttributes = { [ name: string ]: string | number; };
@@ -61,7 +63,6 @@ export const factory = (events: IEventGenerator) => async (event: SNSEvent) => {
         expiresAt: t + (60*60*24*30)
       }
     })
-    .promise()
     .then(v => console.debug(v))
     .catch(e => {throw e;});
 
@@ -88,9 +89,8 @@ export const factory = (events: IEventGenerator) => async (event: SNSEvent) => {
                       Resource: v.resource,
                       Event: v.event
                     }
-                  }).reduce((o,[k,v])=>{o[k]={DataType:'String',StringValue:v};return o;},{} as aws.SNS.Types.MessageAttributeMap)
+                  }).reduce((o,[k,v])=>{o[k]={DataType:'String',StringValue:v};return o;},{} as Record<string, MessageAttributeValue>)
                 })
-                .promise()
                 .then(console.log)
                 .catch(e=>{throw e;})
             );
