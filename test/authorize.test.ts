@@ -1,11 +1,11 @@
 import { expect } from 'chai'
 import test from 'node:test'
-import authorize from '../src/handlers/authorize'
 import { randomUUID as uuid } from 'crypto'
-import { authtoken } from '../src/helpers/api';
+import authorize from '../src/handlers/authorize.js'
+import { authtoken } from '../src/helpers/api.js';
 
 test('authorizer works', async t => {
-  
+
   const handler = authorize('test', ['TestPermission']);
 
   expect(handler).to.be.an('function');

@@ -16,12 +16,13 @@
   "main": "lib/index",
   "module": "lib/index",
   "typings": "lib/index",
+  "type": "module",
   "files": [
     "lib/**/*"
   ],
   "scripts": {
     "check": "tsc --noEmit --pretty",
-    "test": "tap --ts --bail --no-cov --files test/**/*.test.ts",
+    "test": "tap --typecheck --bail --disable-coverage --files test/**/*.test.ts",
     "build": "tsc -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test",
@@ -32,16 +33,16 @@
     "@aws-sdk/client-sns": "^3.828.0",
     "@aws-sdk/lib-dynamodb": "^3.828.0",
     "@aws-sdk/node-http-handler": "^3.370.0",
-    "axios": "1.9.0",
-    "chai": "5.2.0",
-    "dotenv": "16.5.0"
+    "axios": "^1.10.0",
+    "chai": "^5.2.0",
+    "dotenv": "^16.5.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "8.10.149",
-    "@types/chai": "5.2.2",
+    "@types/aws-lambda": "^8.10.149",
+    "@types/chai": "^5.2.2",
     "@types/node": "^22.15.31",
-    "tap": "21.1.0",
-    "ts-node": "10.9.2",
-    "typescript": "5.8.3"
+    "tap": "^21.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

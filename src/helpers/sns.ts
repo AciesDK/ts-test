@@ -1,5 +1,5 @@
 import { MessageAttributeValue, SNS } from '@aws-sdk/client-sns';
-import { db } from './db'
+import { db } from './db.js'
 import { randomUUID as uuid } from 'crypto'
 import { QueryCommandInput } from '@aws-sdk/lib-dynamodb';
 
