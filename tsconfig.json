@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "module": "NodeNext",
-    "target": "ES2021",
-    "moduleResolution": "NodeNext",
+    "module": "nodenext",
+    "target": "esnext",
+    "moduleResolution": "nodenext",
     "outDir": "./lib",
     "rootDir": "src",
     "inlineSourceMap": false,
@@ -20,7 +20,9 @@
     "resolveJsonModule": true,
     "declaration": true
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "ts-node": {
     "transpileOnly": true,
     "files": true,
