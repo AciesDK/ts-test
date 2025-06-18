@@ -1,37 +1,44 @@
-import { expect } from 'chai'
-import test from 'node:test'
+import { describe, it, expect } from 'vitest'
 import { randomUUID as uuid } from 'crypto'
 import authorize from '../src/handlers/authorize.js'
 import { authtoken } from '../src/helpers/api.js';
 
-test('authorizer works', async t => {
+describe('authorizer works', () => {
+  let handler = authorize('test', ['TestPermission']);
 
-  const handler = authorize('test', ['TestPermission']);
+  it('should allow valid token and deny invalid token', async () => {
+    const handler = authorize('test', ['TestPermission']);
 
-  expect(handler).to.be.an('function');
-
-  const account = uuid();
-
-  const token = await handler({
-    type: 'TOKEN',
-    methodArn: 'arn:aws:execute-api:eu-central-1:864358974821:q8jejjlix5/LATEST/POST/bom/engines',
-    authorizationToken: authtoken(account).toString()
+    expect(handler).toBeTypeOf('function');
   });
 
-  expect(token).to.be.an('object');
-  expect(token.policyDocument.Statement).to.be.an('array').with.lengthOf(1);
-  expect(token.policyDocument.Statement[0].Effect).to.eq('Allow');
-  expect(token.policyDocument.Statement[0].Action).to.eq('execute-api:Invoke');
-  expect(token.context?.AccountId).to.eq(account);
+  it('should return a valid token for a valid account', async () => {
+    const account = uuid();
 
-  const token2 = await handler({
-    type: 'TOKEN',
-    methodArn: 'arn:aws:execute-api:eu-central-1:864358974821:q8jejjlix5/LATEST/POST/bom/engines',
-    authorizationToken: 'invalid-token'
+    const token = await handler({
+      type: 'TOKEN',
+      methodArn: 'arn:aws:execute-api:eu-central-1:864358974821:q8jejjlix5/LATEST/POST/bom/engines',
+      authorizationToken: authtoken(account).toString()
+    });
+
+    expect(token).toBeTypeOf('object');
+    expect(token.policyDocument.Statement).toBeInstanceOf(Array);
+    expect(token.policyDocument.Statement).toHaveLength(1);
+    expect(token.policyDocument.Statement[0].Effect).toBe('Allow');
+    expect(token.policyDocument.Statement[0].Action).toBe('execute-api:Invoke');
+    expect(token.context?.AccountId).toBe(account);
   });
 
-  expect(token2).to.be.an('object');
-  expect(token2.policyDocument.Statement).to.be.an('array').with.lengthOf(1);
-  expect(token2.policyDocument.Statement[0].Effect).to.eq('Deny');
+  it('should deny access for an invalid token', async () => {
+    const token2 = await handler({
+      type: 'TOKEN',
+      methodArn: 'arn:aws:execute-api:eu-central-1:864358974821:q8jejjlix5/LATEST/POST/bom/engines',
+      authorizationToken: 'invalid-token'
+    });
 
+    expect(token2).toBeTypeOf('object');
+    expect(token2.policyDocument.Statement).toBeInstanceOf(Array);
+    expect(token2.policyDocument.Statement).toHaveLength(1);
+    expect(token2.policyDocument.Statement[0].Effect).toBe('Deny');
+  });
 });

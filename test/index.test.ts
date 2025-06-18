@@ -1,8 +1,7 @@
-import { expect } from 'chai'
-import test from 'node:test'
+import { describe, it, expect } from 'vitest'
 
-test('ok', async t => {
-  
-  expect(true).to.be.true;
-
+describe('ok', () => {
+  it('should be true', () => {
+    expect(true).toBe(true);
+  });
 });
